@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { createRequire } from "node:module";
-import { init, load_pk, prove, CircuitKind } from "openac-rsa-x509";
+import { init, load_pk, prove, verify, CircuitKind } from "openac-rsa-x509";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ASSETS = join(HERE, "..", "assets");
@@ -40,21 +40,39 @@ test("certChainRS4096: witness generation produces valid wtns bytes", async () =
   assert.equal(version, 2, "wtns version is 2");
 });
 
+// Shared across the prove/verify tests below so verify doesn't redo proving.
+let proveResult;
+
 test("certChainRS4096: prove returns a proof and public values", { timeout: 10 * 60 * 1000 }, async () => {
   const pkBytes = await readFile(join(ASSETS, "cert_chain_rs4096_proving.key"));
   await load_pk(CircuitKind.CertChainRs4096, pkBytes);
 
   const wtns = await calculateWtns();
-  const result = await prove(CircuitKind.CertChainRs4096, wtns);
+  proveResult = await prove(CircuitKind.CertChainRs4096, wtns);
 
   // prove() returns { proof: number[], instance: number[], public_values: string[] }
   // (worker.ts wraps proof in new Uint8Array(certProofOut.proof))
-  assert.ok(Array.isArray(result.proof), "proof is an Array");
-  assert.ok(result.proof.length > 0, "proof is non-empty");
-  assert.ok(Array.isArray(result.public_values), "public_values is array");
-  assert.ok(result.public_values.length > 0, "public_values is non-empty");
+  assert.ok(Array.isArray(proveResult.proof), "proof is an Array");
+  assert.ok(proveResult.proof.length > 0, "proof is non-empty");
+  assert.ok(Array.isArray(proveResult.public_values), "public_values is array");
+  assert.ok(proveResult.public_values.length > 0, "public_values is non-empty");
   // Spot-check: all public_values are hex strings
-  for (const v of result.public_values) {
+  for (const v of proveResult.public_values) {
     assert.match(v, /^0x[0-9a-f]+$/, `public value is hex: ${v}`);
   }
+});
+
+test("certChainRS4096: verify accepts the proof from prove()", { timeout: 2 * 60 * 1000 }, async () => {
+  assert.ok(proveResult, "prove() must have run first");
+  const vkBytes = await readFile(join(ASSETS, "cert_chain_rs4096_verifying.key"));
+  const proofBytes = new Uint8Array(proveResult.proof);
+
+  const result = await verify(proofBytes, vkBytes);
+
+  assert.equal(result.valid, true, "proof verifies");
+  assert.deepEqual(
+    result.public_values,
+    proveResult.public_values,
+    "verify's public_values match prove's",
+  );
 });

@@ -1,5 +1,5 @@
 node_modules/
 
-# Large proving keys (download with: npm run fetch:keys)
+# Large proving/verifying keys (download with: npm run fetch:keys)
 assets/*.key
 assets/.proving-keys-manifest.json
