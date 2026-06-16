@@ -1,7 +1,6 @@
-# openac-rsa-x509
+# openac-rsa-x509-js
 
-Node.js bindings for proving and verifying RSA X.509 certificate chains with
-the OpenAC Spartan2 circuits.
+Node.js bindings for proving and verifying RSA X.509 certificate chains with the OpenAC Spartan2 circuits.
 
 ## Introduction
 
@@ -13,7 +12,7 @@ branch of [zkID](https://github.com/privacy-ethereum/zkID), exposing
 ## Installation
 
 ```sh
-npm add https://github.com/zkmopro/openac-rsa-x509
+npm add https://github.com/privacy-ethereum/openac-rsa-x509-js
 ```
 
 or add it directly to `package.json`:
@@ -21,7 +20,7 @@ or add it directly to `package.json`:
 ```json
 {
   "dependencies": {
-    "openac-rsa-x509": "github:zkmopro/openac-rsa-x509"
+    "openac-rsa-x509": "github:privacy-ethereum/openac-rsa-x509-js"
   }
 }
 ```
@@ -77,8 +76,8 @@ first.
 ## Development
 
 ```sh
-git clone https://github.com/zkmopro/openac-rsa-x509
-cd openac-rsa-x509
+git clone https://github.com/privacy-ethereum/openac-rsa-x509-js
+cd openac-rsa-x509-js
 npm install
 npm run fetch:assets
 npm run fetch:keys
