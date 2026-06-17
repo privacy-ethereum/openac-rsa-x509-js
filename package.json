@@ -4,7 +4,12 @@
   "description": "OpenAC RSA X.509 certificate utilities",
   "type": "module",
   "main": "src/index.mjs",
-  "exports": "./src/index.mjs",
+  "exports": {
+    ".": {
+      "browser": "./src/browser.mjs",
+      "default": "./src/index.mjs"
+    }
+  },
   "scripts": {
     "fetch:assets": "node scripts/fetch-assets.mjs",
     "fetch:keys": "node scripts/fetch-proving-keys.mjs",
