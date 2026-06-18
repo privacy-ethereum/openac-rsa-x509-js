@@ -195,7 +195,9 @@ async function main() {
   await fetchDownloads(manifest);
   await fetchTarballs(manifest);
   await writeStubs();
-  await patchWorkerHelpers();
+  if (!process.env.SKIP_WORKER_HELPERS_PATCH) {
+    await patchWorkerHelpers();
+  }
   await saveManifest(manifest);
   console.log("fetch-assets: done");
 }
