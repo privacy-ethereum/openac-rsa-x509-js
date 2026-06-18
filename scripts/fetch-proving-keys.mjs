@@ -33,18 +33,6 @@ const PROVING_KEYS = [
     src: "user_sig_rs2048_proving.key.gz",
     out: join(ASSETS, "user_sig_rs2048_proving.key"),
   },
-  {
-    src: "cert_chain_rs2048_verifying.key.gz",
-    out: join(ASSETS, "cert_chain_rs2048_verifying.key"),
-  },
-  {
-    src: "cert_chain_rs4096_verifying.key.gz",
-    out: join(ASSETS, "cert_chain_rs4096_verifying.key"),
-  },
-  {
-    src: "user_sig_rs2048_verifying.key.gz",
-    out: join(ASSETS, "user_sig_rs2048_verifying.key"),
-  },
 ];
 
 async function loadManifest() {
